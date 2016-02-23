@@ -21,13 +21,13 @@ public class IntegerMultithreadSorter {
     public List<Integer> calculate() throws ExecutionException, InterruptedException {
         createThreadsPool();
         ArrayList<Future> futures = new ArrayList<>();
-        ExecutorService service = Executors.newFixedThreadPool(cpus-1);
-        for (Callable data:runnable){
+        ExecutorService service = Executors.newFixedThreadPool(cpus - 1);
+        for (Callable data : runnable) {
             futures.add(service.submit(data));
         }
-        int i=0;
-        ArrayList<List<Integer>> resultData= new ArrayList<>();
-        for (Future fut:futures){
+        int i = 0;
+        ArrayList<List<Integer>> resultData = new ArrayList<>();
+        for (Future fut : futures) {
             resultData.add((List<Integer>) fut.get());
             i++;
         }
@@ -41,10 +41,10 @@ public class IntegerMultithreadSorter {
         int temporaryStepValue = 0;
         for (int i = 0; i < cpus; i++) {
             List<Integer> oneThreadData;
-            if (i<cpus-1){
+            if (i < cpus - 1) {
                 oneThreadData = data.subList(temporaryStepValue, threadDataCapacity);
             } else {
-                int ending=(data.size());
+                int ending = (data.size());
                 oneThreadData = data.subList(temporaryStepValue, ending);
             }
             runnable.add(new SortingThread(oneThreadData));
@@ -52,28 +52,28 @@ public class IntegerMultithreadSorter {
         }
     }
 
-    private List<Integer> sortResultArrays(List<List<Integer>> result){
+    private List<Integer> sortResultArrays(List<List<Integer>> result) {
         TempSortObject tso;
         int arraysQuantity = result.size();
         ArrayList<LinkedList<Integer>> resultData = new ArrayList<>(arraysQuantity);
         LinkedList<Integer> sortResult = new LinkedList<>();
-        for (int i=0; i<result.size(); i++){
+        for (int i = 0; i < result.size(); i++) {
             int tempSize = result.get(i).size();
             LinkedList<Integer> temp = new LinkedList<>();
             temp.addAll(result.get(i));
             resultData.add(temp);
         }
 
-        for (int i=0; i<data.size(); i++){
-            tso=null;
-            for (LinkedList<Integer> oneOfTheArrays:resultData){
-                if ((tso==null)&&(oneOfTheArrays.peekFirst()!=null)) {
+        for (int i = 0; i < data.size(); i++) {
+            tso = null;
+            for (LinkedList<Integer> oneOfTheArrays : resultData) {
+                if ((tso == null) && (oneOfTheArrays.peekFirst() != null)) {
                     tso = new TempSortObject(oneOfTheArrays);
-                } else if ((oneOfTheArrays.peekFirst()!=null)&&(oneOfTheArrays.peekFirst()<tso.getData().peekFirst())) {
+                } else if ((oneOfTheArrays.peekFirst() != null) && (oneOfTheArrays.peekFirst() < tso.getData().peekFirst())) {
                     tso = new TempSortObject(oneOfTheArrays);
                 }
             }
-            if (tso!=null) sortResult.add(tso.getData().pollFirst());
+            if (tso != null) sortResult.add(tso.getData().pollFirst());
         }
         return sortResult;
     }

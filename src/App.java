@@ -12,15 +12,15 @@ public class App {
         generate(data, 100, 500);
         IntegerMultithreadSorter ims = new IntegerMultithreadSorter(data);
         List<Integer> resultData = ims.calculate();
-        for (Integer intdata:resultData){
+        for (Integer intdata : resultData) {
             System.out.println(intdata);
         }
-        System.out.println("Starting array has "+data.size()+" elements. Resulting array has "+resultData.size()+" elements.");
+        System.out.println("Starting array has " + data.size() + " elements. Resulting array has " + resultData.size() + " elements.");
     }
 
-    public static void generate(ArrayList target, int capacity, int maxValue){
+    public static void generate(ArrayList target, int capacity, int maxValue) {
         Random random = new Random();
-        for (int i=0; i<capacity; i++){
+        for (int i = 0; i < capacity; i++) {
             int value = random.nextInt(maxValue);
             target.add(value);
         }
