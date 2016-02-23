@@ -9,11 +9,13 @@ import java.util.concurrent.ExecutionException;
 public class App {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         ArrayList<Integer> data = new ArrayList<>();
-        generate(data, 10000, 100);
-        System.out.println(data.size()+" fuck");
+        generate(data, 100, 500);
         IntegerMultithreadSorter ims = new IntegerMultithreadSorter(data);
         List<Integer> resultData = ims.calculate();
-        System.out.println(resultData.toArray());
+        for (Integer intdata:resultData){
+            System.out.println(intdata);
+        }
+        System.out.println("Starting array has "+data.size()+" elements. Resulting array has "+resultData.size()+" elements.");
     }
 
     public static void generate(ArrayList target, int capacity, int maxValue){

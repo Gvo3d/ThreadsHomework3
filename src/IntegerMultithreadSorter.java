@@ -20,21 +20,19 @@ public class IntegerMultithreadSorter {
 
     public List<Integer> calculate() throws ExecutionException, InterruptedException {
         createThreadsPool();
-        ArrayList<Future<List<Integer>>> futures = new ArrayList<>(cpus-1);
+        ArrayList<Future> futures = new ArrayList<>();
         ExecutorService service = Executors.newFixedThreadPool(cpus-1);
-        int i=0;
-        for (Future<List<Integer>> fut:futures){
-            fut = service.submit(runnable.get(i));
-            System.out.println("threadstart");
-            i++;
+        for (Callable data:runnable){
+            futures.add(service.submit(data));
         }
-        i=0;
+        int i=0;
         ArrayList<List<Integer>> resultData= new ArrayList<>();
         for (Future fut:futures){
             resultData.add((List<Integer>) fut.get());
             i++;
         }
         List<Integer> result = sortResultArrays(resultData);
+        service.shutdownNow();
         return result;
     }
 
@@ -47,7 +45,7 @@ public class IntegerMultithreadSorter {
                 oneThreadData = data.subList(temporaryStepValue, threadDataCapacity);
             } else {
                 int ending=(data.size());
-                oneThreadData = data.subList(temporaryStepValue, ending-1);
+                oneThreadData = data.subList(temporaryStepValue, ending);
             }
             runnable.add(new SortingThread(oneThreadData));
             temporaryStepValue += threadDataCapacity;
@@ -65,17 +63,17 @@ public class IntegerMultithreadSorter {
             temp.addAll(result.get(i));
             resultData.add(temp);
         }
-        System.out.println("resultData is "+resultData.size());
-        for (int i=0; i<data.size()-1; i++){
+
+        for (int i=0; i<data.size(); i++){
             tso=null;
             for (LinkedList<Integer> oneOfTheArrays:resultData){
-                if (tso==null) {
+                if ((tso==null)&&(oneOfTheArrays.peekFirst()!=null)) {
                     tso = new TempSortObject(oneOfTheArrays);
-                } else if ((oneOfTheArrays.getFirst()!=null)&&(oneOfTheArrays.getFirst()<tso.getData().getFirst())) {
+                } else if ((oneOfTheArrays.peekFirst()!=null)&&(oneOfTheArrays.peekFirst()<tso.getData().peekFirst())) {
                     tso = new TempSortObject(oneOfTheArrays);
                 }
             }
-            sortResult.add(tso.getData().pollFirst());
+            if (tso!=null) sortResult.add(tso.getData().pollFirst());
         }
         return sortResult;
     }

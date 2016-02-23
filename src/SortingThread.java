@@ -22,7 +22,6 @@ public class SortingThread implements Callable<List<Integer>> {
                 return 0;
             }
         });
-        System.out.println("threadended");
         return data;
     }
 }
